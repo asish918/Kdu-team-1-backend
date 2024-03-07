@@ -1,0 +1,16 @@
+type Query {
+  roomById(id: ID): Room
+}
+
+type Room {
+  id: ID
+  name: String
+  tenant: Tenant
+}
+
+type Tenant {
+  id: ID
+  firstName: String
+  lastName: String
+}
+
