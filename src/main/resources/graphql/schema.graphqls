@@ -3,13 +3,13 @@ type Query {
 }
 
 type Room {
-  id: ID
+  room_id: ID
   name: String
   tenant: Tenant
 }
 
 type Tenant {
-  id: ID
+  tenant_id: ID
   firstName: String
   lastName: String
 }
