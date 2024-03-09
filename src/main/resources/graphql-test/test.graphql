@@ -1,0 +1,11 @@
+query roomDetails {
+    roomById(id: 1) {
+        room_id
+        name
+        tenant {
+            tenant_id
+            firstName
+            lastName
+        }
+    }
+}
