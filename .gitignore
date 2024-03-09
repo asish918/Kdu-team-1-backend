@@ -33,7 +33,6 @@ replay_pid*
 .vscode
 
 target
-application.properties
 .idea
 *.iml
 .jpb
