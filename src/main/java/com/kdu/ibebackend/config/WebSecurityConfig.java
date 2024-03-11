@@ -8,11 +8,14 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
+/**
+ * Custom Security Filter which currently allows all requests to hit the backend
+ */
 @Configuration
 public class WebSecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorizer) -> authorizer
                         .anyRequest().permitAll()

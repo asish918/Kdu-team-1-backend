@@ -9,16 +9,23 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
+/**
+ * A Test Controller that defines test endpoints for consuming in frontend. CORS
+ * has been allowed on
+ * this entire controller
+ */
+@CrossOrigin(origins = "*")
 @RestController
 public class TestController {
 
@@ -34,21 +41,16 @@ public class TestController {
 
     @Operation(summary = "Test the working of the server", description = "Returns \"Hey there!! The server works great \uD83D\uDC4D\"")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved",  content = @Content(
-                    schema = @Schema(implementation = String.class)
-            )),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved", content = @Content(schema = @Schema(implementation = String.class))),
     })
     @GetMapping("/test")
     public String testHealthEndpoint() {
         return "Hey there!! The server works great 👍";
     }
 
-
     @Operation(summary = "Test the working of GraphQL API calls", description = "Returns GraphQL backend response")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully retrieved",  content = @Content(
-                    schema = @Schema(implementation = GraphQLResponse.class)
-            )),
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved", content = @Content(schema = @Schema(implementation = GraphQLResponse.class))),
     })
     @GetMapping("/api/graphql")
     public Mono<GraphQLResponse> testGraphQL() {

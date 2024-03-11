@@ -4,29 +4,34 @@ import com.kdu.ibebackend.entities.Room;
 import com.kdu.ibebackend.entities.Tenant;
 import com.kdu.ibebackend.repository.RoomRepository;
 import com.kdu.ibebackend.repository.TenantRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+/**
+ * Initial Command line runner to setup sample data in the database
+ */
 @Component
+@Slf4j
 public class InitRunner implements CommandLineRunner {
-    private static final Logger LOG =
-            LoggerFactory.getLogger(InitRunner.class);
 
     @Autowired
     private final RoomRepository roomRepository;
     private final TenantRepository tenantRepository;
 
     public InitRunner(RoomRepository roomRepository,
-                      TenantRepository tenantRepository) {
+            TenantRepository tenantRepository) {
         this.roomRepository = roomRepository;
         this.tenantRepository = tenantRepository;
     }
 
     @Override
-    public void run(String...args) throws Exception {
+    public void run(String... args) throws Exception {
         Tenant tenant1 = new Tenant();
         tenant1.setFirstName("Asish");
         tenant1.setLastName("Mahapatra");
@@ -52,6 +57,6 @@ public class InitRunner implements CommandLineRunner {
         roomRepository.save(room1);
         roomRepository.save(room2);
         roomRepository.save(room3);
-        LOG.info("Database is seeded....");
+        log.info("Database is seeded....");
     }
 }
