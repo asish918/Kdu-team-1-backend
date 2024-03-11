@@ -1,0 +1,32 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+    commands:
+      - echo Installing dependencies...
+      - apt-get update && apt-get install -y zip
+      - curl -sL https://deb.nodesource.com/setup_14.x | bash -
+      - apt-get install -y nodejs
+  pre_build:
+    commands:
+      - echo Building Spring Boot application...
+      - ./mvnw clean package
+      # Alternatively, if you're using Gradle:
+      # - ./gradlew clean build
+  build:
+    commands:
+      - echo Build completed, creating artifact...
+      - mkdir -p dist
+      - cp target/*.jar dist/application.jar
+  post_build:
+    commands:
+      - echo Build completed successfully!
+      # Here you can add deployment steps if needed, like deploying to AWS Elastic Beanstalk, EC2, etc.
+      # For example, deploying to Elastic Beanstalk:
+      # - aws elasticbeanstalk create-application-version --application-name <your-application-name> --version-label <version-label> --source-bundle S3Bucket=<your-s3-bucket>,S3Key=<path/to/your/application.jar>
+      # - aws elasticbeanstalk update-environment --environment-name <your-environment-name> --version-label <version-label>
+artifacts:
+  files:
+    - 'dist/*'
