@@ -2,6 +2,7 @@ package com.kdu.ibebackend.controller;
 
 import com.kdu.ibebackend.models.TenantConfig;
 import com.kdu.ibebackend.repository.TenantDynamoRepository;
+import com.kdu.ibebackend.service.CurrencyAPIService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -28,6 +29,9 @@ public class ConfigControllerTest {
 
     @MockBean
     private TenantDynamoRepository tenantDynamoRepository;
+
+    @MockBean
+    private CurrencyAPIService currencyAPIService;
 
     @Test
     public void getTenantConfig() throws Exception {

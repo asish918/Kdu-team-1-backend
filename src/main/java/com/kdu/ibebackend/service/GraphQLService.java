@@ -1,5 +1,8 @@
 package com.kdu.ibebackend.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kdu.ibebackend.models.SecretConfig;
 import com.kdu.ibebackend.utils.GraphUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,16 +17,15 @@ import org.springframework.http.MediaType;
  */
 @Service
 public class GraphQLService {
-    private String graphqlUrl;
-
-    private String apiKey;
+    private final SecretConfig secretConfig;
     private final WebClient webClient;
 
     @Autowired
-    public GraphQLService(@Value( "${graphql.url}" ) String graphqlUrl, @Value( "${graphql.api.key}" ) String apiKey) {
-        this.graphqlUrl = graphqlUrl;
-        this.apiKey = apiKey;
-        this.webClient = WebClient.create(graphqlUrl);
+    public GraphQLService(SecretsManagerService secretsManagerService, @Value("${aws.secret.name}") String secretName) throws JsonProcessingException {
+        String awsSecret = secretsManagerService.getSecretValue(secretName);
+        ObjectMapper mapper = new ObjectMapper();
+        secretConfig = mapper.readValue(awsSecret, SecretConfig.class);
+        this.webClient = WebClient.create(secretConfig.getGraphqlUrl());
     }
 
     public <T> ResponseEntity<T> executePostRequest(String graphqlQuery, Class<T> responseClass) {
@@ -32,7 +34,7 @@ public class GraphQLService {
         T response = webClient.post()
                 .uri("/graphql")
                 .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Api-Key", apiKey)
+                .header("X-Api-Key", secretConfig.getGraphqlApiKey())
                 .bodyValue(formattedQuery)
                 .retrieve()
                 .bodyToMono(responseClass)
