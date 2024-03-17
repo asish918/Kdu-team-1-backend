@@ -37,3 +37,4 @@ target
 *.iml
 .jpb
 logs
+application-dev.properties

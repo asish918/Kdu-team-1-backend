@@ -1,6 +1,5 @@
 package com.kdu.ibebackend;
 
-import com.kdu.ibebackend.service.GraphQLService;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,13 +34,6 @@ class IbeBackendApplicationTests {
 	private Environment env;
 
 	public static MockWebServer mockBackEnd;
-	private GraphQLService graphQLService;
-
-	@BeforeEach
-	void initialize() {
-		this.graphQLService = new GraphQLService(env.getProperty("graphql.url"), env.getProperty("graphql.api.key"));
-	}
-
 
 	@BeforeAll
 	static void setUp() throws IOException {

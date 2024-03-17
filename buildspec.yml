@@ -1,0 +1,13 @@
+version: 0.2
+phases:
+  build:
+    commands:
+      - echo Packaging JAR File
+      - mvn clean packages -Daws.secretKey=${aws.secretKey} -Daws.accessKey=${aws.accessKey} -Daws.sessionKey=${aws.sessionKey}
+  post_build:
+    commands:
+      - echo Build complete.
+artifacts:
+  files:
+    - target/ibe-backend-0.0.1-SNAPSHOT.jar
+  discard-paths: yes
