@@ -1,14 +1,17 @@
 package com.kdu.ibebackend.service;
 
-import com.kdu.ibebackend.dto.GraphQLResponse;
+import com.kdu.ibebackend.utils.GraphUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
 
 import org.springframework.http.MediaType;
 
+/**
+ * Service for executing GraphQL Service calls to given backend
+ */
 @Service
 public class GraphQLService {
     private String graphqlUrl;
@@ -23,15 +26,18 @@ public class GraphQLService {
         this.webClient = WebClient.create(graphqlUrl);
     }
 
-    public Mono<GraphQLResponse> executePostRequest() {
-        String graphqlQuery = "{ \"query\": \"query FindPropertyByName { countRooms }\" }";
+    public <T> ResponseEntity<T> executePostRequest(String graphqlQuery, Class<T> responseClass) {
+        String formattedQuery = GraphUtils.convertToGraphQLRequest(graphqlQuery);
 
-        return webClient.post()
+        T response = webClient.post()
                 .uri("/graphql")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("X-Api-Key", apiKey)
-                .bodyValue(graphqlQuery)
+                .bodyValue(formattedQuery)
                 .retrieve()
-                .bodyToMono(GraphQLResponse.class);
+                .bodyToMono(responseClass)
+                .block();
+
+        return ResponseEntity.ok(response);
     }
 }
