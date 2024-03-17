@@ -16,13 +16,13 @@ import org.springframework.context.annotation.Profile;
  */
 @Configuration
 public class DynamoDBConfig {
-    @Value("${aws.accessKey}")
+    @Value("${awsAccessKey}")
     private String accessKey;
 
-    @Value("${aws.secretKey}")
+    @Value("${awsSecretKey}")
     private String secretKey;
 
-    @Value("${aws.sessionKey}")
+    @Value("${awsSessionKey}")
     private String sessionKey;
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {

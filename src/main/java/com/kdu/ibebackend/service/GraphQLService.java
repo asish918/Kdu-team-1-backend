@@ -21,7 +21,7 @@ public class GraphQLService {
     private final WebClient webClient;
 
     @Autowired
-    public GraphQLService(SecretsManagerService secretsManagerService, @Value("${aws.secret.name}") String secretName) throws JsonProcessingException {
+    public GraphQLService(SecretsManagerService secretsManagerService, @Value("${awsSecretName}") String secretName) throws JsonProcessingException {
         String awsSecret = secretsManagerService.getSecretValue(secretName);
         ObjectMapper mapper = new ObjectMapper();
         secretConfig = mapper.readValue(awsSecret, SecretConfig.class);

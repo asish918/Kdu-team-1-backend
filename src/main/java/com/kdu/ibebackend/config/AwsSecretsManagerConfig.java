@@ -18,13 +18,13 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class AwsSecretsManagerConfig {
 
-    @Value("${aws.accessKey}")
+    @Value("${awsAccessKey}")
     private String accessKey;
 
-    @Value("${aws.secretKey}")
+    @Value("${awsSecretKey}")
     private String secretKey;
 
-    @Value("${aws.sessionKey}")
+    @Value("${awsSessionKey}")
     private String sessionKey;
 
     @Bean
