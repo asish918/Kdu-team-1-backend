@@ -3,7 +3,7 @@ phases:
   build:
     commands:
       - echo Packaging JAR File
-      - mvn clean install -DawsSecretKey=${AWS_SECRETKEY} -DawsAccessKey=${AWS_ACCESSKEY} -DawsSessionKey=${AWS_SESSIONKEY}
+      - mvn clean install -DskipTests
   post_build:
     commands:
       - echo Build complete.

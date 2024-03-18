@@ -1,11 +1,15 @@
 package com.kdu.ibebackend;
 
+import com.kdu.ibebackend.service.CurrencyAPIService;
+import com.kdu.ibebackend.service.GraphQLService;
+import com.kdu.ibebackend.service.PropertyService;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -17,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.io.IOException;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.BDDMockito.given;
 
 
 @SpringBootTest
@@ -34,6 +39,15 @@ class IbeBackendApplicationTests {
 	private Environment env;
 
 	public static MockWebServer mockBackEnd;
+
+	@MockBean
+	private CurrencyAPIService currencyAPIService;
+
+	@MockBean
+	private PropertyService propertyService;
+
+	@MockBean
+	private GraphQLService graphQLService;
 
 	@BeforeAll
 	static void setUp() throws IOException {

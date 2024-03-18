@@ -38,3 +38,4 @@ target
 .jpb
 logs
 application-dev.properties
+htmlReport/*
