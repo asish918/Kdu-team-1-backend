@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
  * has been allowed on
  * this entire controller
  */
-@CrossOrigin(origins = "*")
 @RestController
 public class TestController {
     private final GraphQLService graphQLService;

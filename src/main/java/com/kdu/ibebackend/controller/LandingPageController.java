@@ -22,7 +22,6 @@ import java.util.Map;
  * Controller for all landing page endpoints
  */
 @Controller
-@CrossOrigin(origins = "*")
 @RequestMapping(path = "/api/landingpage")
 public class LandingPageController {
     private final PropertyService propertyService;

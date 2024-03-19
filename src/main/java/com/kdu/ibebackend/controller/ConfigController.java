@@ -1,5 +1,6 @@
 package com.kdu.ibebackend.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kdu.ibebackend.dto.CurrencyAPIResponse;
 import com.kdu.ibebackend.models.TenantConfig;
 import com.kdu.ibebackend.repository.TenantDynamoRepository;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
  * Controller for Configuration APIs
  */
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping(path = "/api")
 @Slf4j
 public class ConfigController {
@@ -28,12 +28,12 @@ public class ConfigController {
     }
 
     @GetMapping("config/{tenantId}")
-    public TenantConfig testDynamo(@PathVariable String tenantId) {
+    public TenantConfig testDynamo(@PathVariable String tenantId) throws JsonProcessingException {
         return tenantDynamoRepository.getTenantConfig(Integer.parseInt(tenantId));
     }
 
     @GetMapping("/exchangerates")
-    public ResponseEntity<CurrencyAPIResponse> exchangeRates() {
+    public ResponseEntity<CurrencyAPIResponse> exchangeRates() throws JsonProcessingException {
         return currencyAPIService.executePostRequest();
     }
 }
