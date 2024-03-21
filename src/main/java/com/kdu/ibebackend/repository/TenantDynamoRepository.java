@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kdu.ibebackend.models.TenantConfig;
+import com.kdu.ibebackend.utils.EnvUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -13,7 +14,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
 
-import java.util.Objects;
 
 /**
  * Repository to perform CRUD Operations on DynamoDB
@@ -33,7 +33,7 @@ public class TenantDynamoRepository {
 
     @Cacheable("tenantconfig")
     public TenantConfig getTenantConfig(Number tenantId) throws JsonProcessingException {
-        if(Objects.equals(env.getProperty("spring.profiles.active"), "dev") || Objects.equals(env.getProperty("spring.profiles.active"), "test")) {
+        if(EnvUtils.localEnvironmentCheck(env.getProperty("spring.profiles.active"))) {
             log.info(env.getProperty("config"));
             ObjectMapper mapper = new ObjectMapper();
             TenantConfig tenantConfig = mapper.readValue(env.getProperty("config"), TenantConfig.class);

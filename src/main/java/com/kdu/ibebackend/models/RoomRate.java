@@ -14,5 +14,4 @@ public class RoomRate {
     private String date;
     private double basic_nightly_rate;
     private int room_rate_id;
-
 }
