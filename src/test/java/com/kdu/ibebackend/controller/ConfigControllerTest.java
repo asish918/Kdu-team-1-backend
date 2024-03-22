@@ -1,7 +1,7 @@
 package com.kdu.ibebackend.controller;
 
 import com.kdu.ibebackend.models.TenantConfig;
-import com.kdu.ibebackend.repository.TenantDynamoRepository;
+import com.kdu.ibebackend.repository.DynamoRepository;
 import com.kdu.ibebackend.service.CurrencyAPIService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class ConfigControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private TenantDynamoRepository tenantDynamoRepository;
+    private DynamoRepository dynamoRepository;
 
     @MockBean
     private CurrencyAPIService currencyAPIService;
@@ -38,7 +38,7 @@ public class ConfigControllerTest {
         // Mocking the service method
         TenantConfig tenantConfig = new TenantConfig();
         tenantConfig.setTenantId(123);
-        given(tenantDynamoRepository.getTenantConfig(anyInt())).willReturn(tenantConfig);
+        given(dynamoRepository.getTenantConfig(anyInt())).willReturn(tenantConfig);
 
         // Performing GET request
         mockMvc.perform(get("/api/config/1")

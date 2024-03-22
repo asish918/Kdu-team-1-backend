@@ -22,4 +22,7 @@ public class RoomType {
 
     @JsonProperty("single_bed")
     private Integer single_bed;
+
+    @JsonProperty("room_type_id")
+    private Integer room_type_id;
 }

@@ -21,6 +21,9 @@ public class TenantConfig {
     @DynamoDBAttribute(attributeName = "banner_image_url")
     private String bannerImageUrl;
 
+    @DynamoDBAttribute(attributeName = "footer_logo")
+    private String footerLogoUrl;
+
     @DynamoDBAttribute(attributeName = "max_length_stay")
     private Integer maxLengthStay;
 

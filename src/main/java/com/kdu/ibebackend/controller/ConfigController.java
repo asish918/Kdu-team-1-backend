@@ -3,12 +3,11 @@ package com.kdu.ibebackend.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kdu.ibebackend.dto.CurrencyAPIResponse;
 import com.kdu.ibebackend.models.TenantConfig;
-import com.kdu.ibebackend.repository.TenantDynamoRepository;
+import com.kdu.ibebackend.repository.DynamoRepository;
 import com.kdu.ibebackend.service.CurrencyAPIService;
 import com.kdu.ibebackend.utils.ParamUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,7 +16,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.constraints.Min;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +26,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/api")
 @Slf4j
 public class ConfigController {
-    private final TenantDynamoRepository tenantDynamoRepository;
+    private final DynamoRepository dynamoRepository;
     private final CurrencyAPIService currencyAPIService;
 
     @Autowired
     public ConfigController(
-            TenantDynamoRepository tenantDynamoRepository, CurrencyAPIService currencyAPIService) {
-        this.tenantDynamoRepository = tenantDynamoRepository;
+            DynamoRepository dynamoRepository, CurrencyAPIService currencyAPIService) {
+        this.dynamoRepository = dynamoRepository;
         this.currencyAPIService = currencyAPIService;
     }
 
@@ -45,7 +43,7 @@ public class ConfigController {
     @GetMapping("config")
     public TenantConfig testDynamo(@RequestParam @Min(1) String tenantId) throws Exception {
         if(!ParamUtils.isNumeric(tenantId)) throw new Exception("Tenant Id should be string");
-        return tenantDynamoRepository.getTenantConfig(Integer.parseInt(tenantId));
+        return dynamoRepository.getTenantConfig(Integer.parseInt(tenantId));
     }
 
     @Operation(summary = "Fetch Exchange Rates",

@@ -1,5 +1,6 @@
 package com.kdu.ibebackend.utils;
 
+import com.kdu.ibebackend.repository.DynamoRepository;
 import com.kdu.ibebackend.service.SecretsManagerService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,8 +15,15 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class InitRunner implements CommandLineRunner {
+    private DynamoRepository dynamoRepository;
+    @Autowired
+    public InitRunner(DynamoRepository dynamoRepository) {
+        this.dynamoRepository = dynamoRepository;
+    }
+
     @Override
     public void run(String... args) throws Exception {
-        log.info("Application Initialized....");
+        RoomUtils.findRatings(dynamoRepository);
+        log.info("Application Initialized. Caches in place....");
     }
 }
