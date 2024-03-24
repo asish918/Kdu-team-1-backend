@@ -1,15 +1,13 @@
 package com.kdu.ibebackend.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kdu.ibebackend.models.PromotionType;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Data
-public class FinalResponse {
+public class RoomResultResponse {
     private Integer area_in_square_feet;
 
     private Integer double_bed;
@@ -40,7 +38,7 @@ public class FinalResponse {
             return true;
         if (obj == null || getClass() != obj.getClass())
             return false;
-        FinalResponse roomType = (FinalResponse) obj;
+        RoomResultResponse roomType = (RoomResultResponse) obj;
         return Objects.equals(room_type_id, roomType.room_type_id);
     }
 

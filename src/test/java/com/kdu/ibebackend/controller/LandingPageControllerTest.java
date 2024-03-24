@@ -1,5 +1,6 @@
 package com.kdu.ibebackend.controller;
 
+import com.kdu.ibebackend.constants.Constants;
 import com.kdu.ibebackend.constants.GraphQLQueries;
 import com.kdu.ibebackend.dto.FetchProperties;
 import com.kdu.ibebackend.models.Property;
@@ -48,7 +49,8 @@ public class LandingPageControllerTest {
 
         // Performing GET request
         mockMvc.perform(get("/api/landingpage/minrates")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Api-Key", Constants.AUTH_TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].date").value("2022-03-01"))
@@ -76,7 +78,8 @@ public class LandingPageControllerTest {
 
         // Perform GET request to the properties endpoint
         mockMvc.perform(get("/api/landingpage/properties")
-                        .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("X-Api-Key", Constants.AUTH_TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.data.listProperties[0].property_name").value("Property 1"))

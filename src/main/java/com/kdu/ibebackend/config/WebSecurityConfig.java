@@ -29,7 +29,7 @@ public class WebSecurityConfig {
                 "http://kdu-team1-frontend.s3-website.ap-south-1.amazonaws.com",
                 "http://localhost:4173",
                 "http://localhost:5173",
-                "https://sprint-2.d33gvmzav8u7ie.amplifyapp.com"
+                "https://sprint-3.d33gvmzav8u7ie.amplifyapp.com"
         ));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));

@@ -9,7 +9,6 @@ import com.kdu.ibebackend.models.TenantConfig;
 import com.kdu.ibebackend.utils.EnvUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
@@ -30,7 +29,6 @@ public class DynamoRepository {
         this.dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
     }
 
-    @Cacheable("tenantconfig")
     public TenantConfig getTenantConfig(Number tenantId) throws JsonProcessingException {
         if(EnvUtils.localEnvironmentCheck(env.getProperty("spring.profiles.active"))) {
             log.info(env.getProperty("config"));
@@ -44,11 +42,6 @@ public class DynamoRepository {
     public RoomInfo getRoomRatingReview(Number roomTypeId) throws JsonProcessingException {
         return dynamoDBMapper.load(RoomInfo.class, roomTypeId);
     }
-
-//    @CacheEvict("tenantconfig")
-//    @Scheduled(fixedRate = 86400000)
-//    public void evictDataCache() {
-//    }
 
 //    public void saveTenantConfig(TenantConfig tenantConfig) {
 //        dynamoDBMapper.save(tenantConfig);

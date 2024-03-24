@@ -2,7 +2,6 @@ package com.kdu.ibebackend.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.kdu.ibebackend.constants.GraphQLQueries;
 
 public class GraphUtils {
     /**

@@ -2,7 +2,8 @@ package com.kdu.ibebackend.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kdu.ibebackend.dto.request.SearchParamDTO;
-import com.kdu.ibebackend.dto.response.FinalResponse;
+import com.kdu.ibebackend.dto.response.RoomResultResponse;
+import com.kdu.ibebackend.dto.response.RoomType;
 import com.kdu.ibebackend.models.PromotionType;
 import com.kdu.ibebackend.models.RoomInfo;
 import com.kdu.ibebackend.repository.DynamoRepository;
@@ -48,19 +49,24 @@ public class RoomUtils {
         return maxCap >= ceilValue;
     }
 
-    public static List<FinalResponse> hashMapToList(HashMap<Integer, FinalResponse> finalResponseMap) {
-        List<FinalResponse> resultList = new ArrayList<>();
-        for (Map.Entry<Integer, FinalResponse> entry : finalResponseMap.entrySet()) {
+    public static boolean checkBeds(RoomType roomType, SearchParamDTO searchParamDTO) {
+        if(searchParamDTO.getBeds() == 0) return true;
+        else return (roomType.getSingle_bed() + roomType.getDouble_bed()) == searchParamDTO.getBeds();
+    }
+
+    public static List<RoomResultResponse> hashMapToList(HashMap<Integer, RoomResultResponse> finalResponseMap) {
+        List<RoomResultResponse> resultList = new ArrayList<>();
+        for (Map.Entry<Integer, RoomResultResponse> entry : finalResponseMap.entrySet()) {
             resultList.add(entry.getValue());
         }
         return resultList;
     }
 
-    public static List<FinalResponse> filterRoomTypeIds(List<Integer> roomTypeIds, List<FinalResponse> roomTypes) {
+    public static List<RoomResultResponse> filterRoomTypeIds(List<Integer> roomTypeIds, List<RoomResultResponse> roomTypes) {
         if (roomTypeIds.isEmpty()) return roomTypes;
 
-        List<FinalResponse> filteredRoomTypes = new ArrayList<>();
-        for (FinalResponse roomType : roomTypes) {
+        List<RoomResultResponse> filteredRoomTypes = new ArrayList<>();
+        for (RoomResultResponse roomType : roomTypes) {
             if (roomTypeIds.contains(roomType.getRoom_type_id())) {
                 filteredRoomTypes.add(roomType);
             }
@@ -68,16 +74,16 @@ public class RoomUtils {
         return filteredRoomTypes;
     }
 
-    public static List<FinalResponse> filterRoomTypeBeds(List<String> bedTypes, List<FinalResponse> roomTypes) {
+    public static List<RoomResultResponse> filterRoomTypeBeds(List<String> bedTypes, List<RoomResultResponse> roomTypes) {
         if (bedTypes.isEmpty()) return roomTypes;
 
-        List<FinalResponse> filteredRoomTypes = new ArrayList<>();
-        for (FinalResponse roomType : roomTypes) {
-            if (bedTypes.containsAll(List.of("Single Bed", "Double Bed")) && roomType.getSingle_bed() > 0 && roomType.getDouble_bed() > 0) {
+        List<RoomResultResponse> filteredRoomTypes = new ArrayList<>();
+        for (RoomResultResponse roomType : roomTypes) {
+            if (bedTypes.containsAll(List.of("Single", "Double")) && roomType.getSingle_bed() > 0 && roomType.getDouble_bed() > 0) {
                 filteredRoomTypes.add(roomType);
-            } else if (bedTypes.contains("Single Bed") && roomType.getSingle_bed() > 0 && roomType.getDouble_bed() == 0) {
+            } else if (bedTypes.contains("Single") && bedTypes.size() == 1 && roomType.getSingle_bed() > 0 && roomType.getDouble_bed() == 0) {
                 filteredRoomTypes.add(roomType);
-            } else if (bedTypes.contains("Double Bed") && roomType.getDouble_bed() > 0 && roomType.getSingle_bed() == 0) {
+            } else if (bedTypes.contains("Double") && bedTypes.size() == 1 && roomType.getDouble_bed() > 0 && roomType.getSingle_bed() == 0) {
                 filteredRoomTypes.add(roomType);
             }
         }
@@ -85,49 +91,49 @@ public class RoomUtils {
         return filteredRoomTypes;
     }
 
-    public static List<FinalResponse> sortPriceType(SearchParamDTO searchParamDTO, List<FinalResponse> roomTypes) {
+    public static List<RoomResultResponse> sortPriceType(SearchParamDTO searchParamDTO, List<RoomResultResponse> roomTypes) {
         if (searchParamDTO.getPriceSort()) {
             return roomTypes.stream()
-                    .sorted(Comparator.comparing(FinalResponse::getAverage_rate))
+                    .sorted(Comparator.comparing(RoomResultResponse::getAverage_rate))
                     .collect(Collectors.toList());
         } else {
             return roomTypes.stream()
-                    .sorted(Comparator.comparing(FinalResponse::getAverage_rate).reversed())
+                    .sorted(Comparator.comparing(RoomResultResponse::getAverage_rate).reversed())
                     .collect(Collectors.toList());
         }
     }
 
-    public static List<FinalResponse> sortAreaType(SearchParamDTO searchParamDTO, List<FinalResponse> roomTypes) {
+    public static List<RoomResultResponse> sortAreaType(SearchParamDTO searchParamDTO, List<RoomResultResponse> roomTypes) {
         if (searchParamDTO.getAreaSort()) {
             return roomTypes.stream()
-                    .sorted(Comparator.comparing(FinalResponse::getArea_in_square_feet))
+                    .sorted(Comparator.comparing(RoomResultResponse::getArea_in_square_feet))
                     .collect(Collectors.toList());
         } else {
             return roomTypes.stream()
-                    .sorted(Comparator.comparing(FinalResponse::getArea_in_square_feet).reversed())
+                    .sorted(Comparator.comparing(RoomResultResponse::getArea_in_square_feet).reversed())
                     .collect(Collectors.toList());
         }
     }
 
-    public static List<FinalResponse> sortRatingType(SearchParamDTO searchParamDTO, List<FinalResponse> roomTypes) {
+    public static List<RoomResultResponse> sortRatingType(SearchParamDTO searchParamDTO, List<RoomResultResponse> roomTypes) {
         if (searchParamDTO.getRatingSort()) {
             return roomTypes.stream()
-                    .sorted(Comparator.comparing(FinalResponse::getRating))
+                    .sorted(Comparator.comparing(RoomResultResponse::getRating))
                     .collect(Collectors.toList());
         } else {
             return roomTypes.stream()
-                    .sorted(Comparator.comparing(FinalResponse::getRating).reversed())
+                    .sorted(Comparator.comparing(RoomResultResponse::getRating).reversed())
                     .collect(Collectors.toList());
         }
     }
 
-    public static PromotionType findPromo(List<PromotionType> promotionTypeList, FinalResponse finalResponse) {
+    public static PromotionType findPromo(List<PromotionType> promotionTypeList, RoomResultResponse roomResultResponse, SearchParamDTO searchParamDTO) {
         double minProduct = Double.MAX_VALUE;
         PromotionType minPromo = null;
 
         for (PromotionType promo : promotionTypeList) {
-            double product = promo.getPrice_factor() * finalResponse.getAverage_rate();
-            if (product < minProduct) {
+            double product = promo.getPrice_factor() * roomResultResponse.getAverage_rate();
+            if (product < minProduct && promo.getMinimum_days_of_stay() <= DateUtils.calculateDaysBetween(searchParamDTO.getStartDate(), searchParamDTO.getEndDate())) {
                 minProduct = product;
                 minPromo = promo;
             }

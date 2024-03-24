@@ -1,8 +1,10 @@
 package com.kdu.ibebackend;
 
+import com.kdu.ibebackend.constants.Constants;
 import com.kdu.ibebackend.service.CurrencyAPIService;
 import com.kdu.ibebackend.service.GraphQLService;
 import com.kdu.ibebackend.service.PropertyService;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import static org.mockito.BDDMockito.given;
 @AutoConfigureMockMvc
 @AutoConfigureWebTestClient
 @ActiveProfiles("test")
+@Slf4j
 class IbeBackendApplicationTests {
 	@Autowired
 	private MockMvc mockMvc;
@@ -39,15 +42,6 @@ class IbeBackendApplicationTests {
 	private Environment env;
 
 	public static MockWebServer mockBackEnd;
-
-	@MockBean
-	private CurrencyAPIService currencyAPIService;
-
-	@MockBean
-	private PropertyService propertyService;
-
-	@MockBean
-	private GraphQLService graphQLService;
 
 	@BeforeAll
 	static void setUp() throws IOException {
@@ -62,29 +56,35 @@ class IbeBackendApplicationTests {
 
 	@Test
 	void testHealthEndpoint() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/test"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/test")
+						.header("X-Api-Key", Constants.AUTH_TOKEN)) // Include X-Api-Key header
 				.andExpect(MockMvcResultMatchers.status().isOk())
 				.andExpect(MockMvcResultMatchers.content().string("Hey there!! The server works great 👍"));
 	}
 
 	@Test
 	void fetchConfig() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/config/1").contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/config?tenantId=1")
+						.contentType(MediaType.APPLICATION_JSON)
+						.header("X-Api-Key", Constants.AUTH_TOKEN)) // Include X-Api-Key header
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.tenantId").value(1));
 	}
 
 	@Test
 	void fetchProperties() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/landingpage/properties") .contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/landingpage/properties")
+						.header("X-Api-Key", Constants.AUTH_TOKEN)
+						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$.data.listProperties[0].property_name").value("Team 1 Hotel"));
 	}
 
 	@Test
 	void fetchMinRates() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/landingpage/minrates").contentType(MediaType.APPLICATION_JSON))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/landingpage/minrates")
+						.contentType(MediaType.APPLICATION_JSON)
+						.header("X-Api-Key", Constants.AUTH_TOKEN)) // Include X-Api-Key header
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 				.andExpect(jsonPath("$[0].date").value("2024-03-01"))

@@ -1,5 +1,6 @@
 package com.kdu.ibebackend.controller;
 
+import com.kdu.ibebackend.constants.Constants;
 import com.kdu.ibebackend.models.TenantConfig;
 import com.kdu.ibebackend.repository.DynamoRepository;
 import com.kdu.ibebackend.service.CurrencyAPIService;
@@ -41,8 +42,9 @@ public class ConfigControllerTest {
         given(dynamoRepository.getTenantConfig(anyInt())).willReturn(tenantConfig);
 
         // Performing GET request
-        mockMvc.perform(get("/api/config/1")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/api/config?tenantId=1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                .header("X-Api-Key", Constants.AUTH_TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tenantId").value(123));
     }

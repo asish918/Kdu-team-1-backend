@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class RoomResultDTOResponse {
+public class ListRoomAvailabilities {
     @JsonProperty("data")
     public Res res;
 

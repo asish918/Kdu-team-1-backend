@@ -2,11 +2,9 @@ package com.kdu.ibebackend.models;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.kdu.ibebackend.models.deserializers.GuestsDeserializer;
-import com.kdu.ibebackend.models.serializers.GuestsSerializer;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * Model for Tenant Config stored in DynamoDB
@@ -39,8 +37,9 @@ public class TenantConfig {
     @DynamoDBAttribute(attributeName = "accessibility")
     private boolean accessibility;
 
-    @JsonSerialize(using = GuestsSerializer.class)
-    @JsonDeserialize(using = GuestsDeserializer.class)
+    @DynamoDBAttribute(attributeName = "sort_options")
+    private List<String> sortOptions;
+
     private Guests guests;
 
     @DynamoDBDocument

@@ -2,9 +2,12 @@ package com.kdu.ibebackend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kdu.ibebackend.constants.GraphQLQueries;
+import com.kdu.ibebackend.dto.graphql.ListRoomRateRoomTypeMappings;
 import com.kdu.ibebackend.dto.request.SearchParamDTO;
 import com.kdu.ibebackend.dto.response.*;
+import com.kdu.ibebackend.dto.response.ListRoomAvailabilities;
 import com.kdu.ibebackend.models.RoomInfo;
+import com.kdu.ibebackend.models.RoomRate;
 import com.kdu.ibebackend.repository.DynamoRepository;
 import com.kdu.ibebackend.utils.DateUtils;
 import com.kdu.ibebackend.utils.GraphUtils;
@@ -31,8 +34,8 @@ public class RoomResultService {
         this.dynamoRepository = dynamoRepository;
     }
 
-    public List<FinalResponse> filteredData(SearchParamDTO searchParamDTO, List<FinalResponse> roomRes) {
-        List<FinalResponse> filteredRoomRes = new ArrayList<>();
+    public List<RoomResultResponse> filteredData(SearchParamDTO searchParamDTO, List<RoomResultResponse> roomRes) {
+        List<RoomResultResponse> filteredRoomRes = roomRes;
 
         if (ParamUtils.containsFilters(searchParamDTO)) {
             filteredRoomRes = RoomUtils.filterRoomTypeIds(searchParamDTO.getRoomTypes(), roomRes);
@@ -51,7 +54,7 @@ public class RoomResultService {
         return filteredRoomRes;
     }
 
-    public HashMap<Integer, FinalResponse> finalResponseMap(SearchParamDTO searchParamDTO) throws JsonProcessingException {
+    public HashMap<Integer, RoomResultResponse> finalResponseMap(SearchParamDTO searchParamDTO) throws JsonProcessingException {
         List<Integer> validRoomTypeIds = roomTypeCount(searchParamDTO);
         HashMap<Integer, HashMap<String, Double>> roomRateType = roomRateType(searchParamDTO);
         HashMap<Integer, Double> roomTypeAverageRate = RoomUtils.calculateAverageRate(roomRateType, searchParamDTO.getStartDate(), searchParamDTO.getEndDate());
@@ -59,25 +62,25 @@ public class RoomResultService {
         PromotionData promotionData = graphQLService.executePostRequest(GraphQLQueries.promotionQuery, PromotionData.class).getBody();
         List<RoomInfo> roomInfoList = RoomUtils.findRatings(dynamoRepository);
 
-        HashMap<Integer, FinalResponse> finalResponseMap = new HashMap<>();
+        HashMap<Integer, RoomResultResponse> finalResponseMap = new HashMap<>();
         for (Integer roomTypeId : validRoomTypeIds) {
             RoomType roomType = roomTypeDetails.get(roomTypeId);
 
-            FinalResponse finalResponse = new FinalResponse();
-            finalResponse.setArea_in_square_feet(roomType.getArea_in_square_feet());
-            finalResponse.setDouble_bed(roomType.getDouble_bed());
-            finalResponse.setSingle_bed(roomType.getSingle_bed());
-            finalResponse.setMax_capacity(roomType.getMax_capacity());
-            finalResponse.setRoom_type_name(roomType.getRoom_type_name());
-            finalResponse.setAverage_rate(roomTypeAverageRate.getOrDefault(roomTypeId, 0.0));
-            finalResponse.setRoom_type_id(roomType.getRoom_type_id());
-            finalResponse.setPromotionType(RoomUtils.findPromo(promotionData.getRes().getPromotionTypeList(), finalResponse));
-            finalResponse.setReviews(roomInfoList.get(roomTypeId - 1).getRoomReviews());
-            finalResponse.setRating(roomInfoList.get(roomTypeId - 1).getRoomRating());
-            finalResponse.setHighResImages(roomInfoList.get(roomTypeId - 1).getHighResImages());
-            finalResponse.setLowResImages(roomInfoList.get(roomTypeId - 1).getLowResImages());
+            RoomResultResponse roomResultResponse = new RoomResultResponse();
+            roomResultResponse.setArea_in_square_feet(roomType.getArea_in_square_feet());
+            roomResultResponse.setDouble_bed(roomType.getDouble_bed());
+            roomResultResponse.setSingle_bed(roomType.getSingle_bed());
+            roomResultResponse.setMax_capacity(roomType.getMax_capacity());
+            roomResultResponse.setRoom_type_name(roomType.getRoom_type_name());
+            roomResultResponse.setAverage_rate(roomTypeAverageRate.getOrDefault(roomTypeId, 0.0));
+            roomResultResponse.setRoom_type_id(roomType.getRoom_type_id());
+            roomResultResponse.setPromotionType(RoomUtils.findPromo(promotionData.getRes().getPromotionTypeList(), roomResultResponse, searchParamDTO));
+            roomResultResponse.setReviews(roomInfoList.get(roomTypeId - 1).getRoomReviews());
+            roomResultResponse.setRating(roomInfoList.get(roomTypeId - 1).getRoomRating());
+            roomResultResponse.setHighResImages(roomInfoList.get(roomTypeId - 1).getHighResImages());
+            roomResultResponse.setLowResImages(roomInfoList.get(roomTypeId - 1).getLowResImages());
 
-            finalResponseMap.put(roomTypeId, finalResponse);
+            finalResponseMap.put(roomTypeId, roomResultResponse);
         }
 
         return finalResponseMap;
@@ -87,7 +90,7 @@ public class RoomResultService {
         String query = GraphQLQueries.roomRes;
         String injectedQuery = GraphUtils.injectSearchParamsQuery(query, searchParamDTO.getStartDate(), searchParamDTO.getEndDate(), String.valueOf(searchParamDTO.getPropertyId()));
         log.info(injectedQuery);
-        RoomResultDTOResponse res = graphQLService.executePostRequest(injectedQuery, RoomResultDTOResponse.class).getBody();
+        ListRoomAvailabilities res = graphQLService.executePostRequest(injectedQuery, ListRoomAvailabilities.class).getBody();
 
         HashMap<Integer, HashMap<String, Integer>> roomTypeCountMap = new HashMap<>();
 
@@ -107,7 +110,7 @@ public class RoomResultService {
 
             roomTypeDetails.put(room.getRoom().getRoom_type_id(), roomType);
 
-            if ((roomType.getSingle_bed() + roomType.getDouble_bed()) == searchParamDTO.getBeds() && RoomUtils.checkGuestMaxCapacity(searchParamDTO.getTotalGuests(), searchParamDTO.getRooms(), roomType.getMax_capacity())) {
+            if (RoomUtils.checkBeds(roomType, searchParamDTO) && RoomUtils.checkGuestMaxCapacity(searchParamDTO.getTotalGuests(), searchParamDTO.getRooms(), roomType.getMax_capacity())) {
                 roomTypeCountMap.putIfAbsent(roomTypeId, new HashMap<>());
                 HashMap<String, Integer> dateCountMap = roomTypeCountMap.get(roomTypeId);
                 dateCountMap.put(date, dateCountMap.getOrDefault(date, 0) + 1);
@@ -133,14 +136,14 @@ public class RoomResultService {
         String query = GraphQLQueries.roomRateRoomTypeMappings;
         String injectedQuery = GraphUtils.injectSearchParamsQuery(query, searchParamDTO.getStartDate(), searchParamDTO.getEndDate(), String.valueOf(searchParamDTO.getPropertyId()));
         log.info(injectedQuery);
-        RoomRateDTOResponse res = graphQLService.executePostRequest(injectedQuery, RoomRateDTOResponse.class).getBody();
+        ListRoomRateRoomTypeMappings res = graphQLService.executePostRequest(injectedQuery, ListRoomRateRoomTypeMappings.class).getBody();
 
         HashMap<Integer, HashMap<String, Double>> roomTypeRateMap = new HashMap<>();
 
         assert res != null;
         for (RoomRateWrapper roomTypeWithRate : res.getRes().getRoomRates()) {
             RoomRate roomRate = roomTypeWithRate.getRoomRate();
-            int roomTypeId = roomTypeWithRate.getRoomTypeRate().getRoom_type_id();
+            int roomTypeId = roomTypeWithRate.getRoomType().getRoom_type_id();
 
             String date = roomRate.getDate();
             double basicNightlyRate = roomRate.getBasic_nightly_rate();
