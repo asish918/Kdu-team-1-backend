@@ -1,7 +1,7 @@
 package com.kdu.ibebackend.service;
 
 import com.kdu.ibebackend.constants.GraphQLQueries;
-import com.kdu.ibebackend.dto.response.PromotionData;
+import com.kdu.ibebackend.dto.graphql.ListPromotions;
 import com.kdu.ibebackend.models.PromotionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service for fetching all promotions and caching them to optimise API Latency
+ */
 @Service
 public class PromotionService {
     private GraphQLService graphQLService;
@@ -22,7 +25,7 @@ public class PromotionService {
 
     @Cacheable("promotions")
     public List<PromotionType> fetchPromotions() {
-        PromotionData data = graphQLService.executePostRequest(GraphQLQueries.promotionQuery, PromotionData.class).getBody();
+        ListPromotions data = graphQLService.executePostRequest(GraphQLQueries.promotionQuery, ListPromotions.class).getBody();
         return data.getRes().getPromotionTypeList();
     }
 

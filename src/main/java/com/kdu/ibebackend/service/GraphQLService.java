@@ -13,7 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.http.MediaType;
 
 /**
- * Service for executing GraphQL Service calls to given backend
+ * Service for executing GraphQL Service calls to the backend
  */
 @Service
 public class GraphQLService {

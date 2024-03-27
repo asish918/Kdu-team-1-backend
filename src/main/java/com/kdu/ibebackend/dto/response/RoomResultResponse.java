@@ -6,21 +6,24 @@ import lombok.Data;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * DTO for sending data to room results page
+ */
 @Data
 public class RoomResultResponse {
-    private Integer area_in_square_feet;
+    private Integer areaInSquareFeet;
 
-    private Integer double_bed;
+    private Integer doubleBed;
 
-    private Integer max_capacity;
+    private Integer maxCapacity;
 
-    private String room_type_name;
+    private String roomTypeName;
 
-    private Integer single_bed;
+    private Integer singleBed;
 
-    private Double average_rate;
+    private Double averageRate;
 
-    private Integer room_type_id;
+    private Integer roomTypeId;
 
     private Double rating;
 
@@ -30,7 +33,11 @@ public class RoomResultResponse {
 
     private List<String> lowResImages;
 
-    private PromotionType promotionType;
+    private PromotionType bestPromotion;
+
+    private List<PromotionType> validPromotions;
+
+    private List<String> amenities;
 
     @Override
     public boolean equals(Object obj) {
@@ -39,11 +46,11 @@ public class RoomResultResponse {
         if (obj == null || getClass() != obj.getClass())
             return false;
         RoomResultResponse roomType = (RoomResultResponse) obj;
-        return Objects.equals(room_type_id, roomType.room_type_id);
+        return Objects.equals(roomTypeId, roomType.roomTypeId);
     }
 
     @Override
     public int hashCode() {
-        return room_type_id;
+        return roomTypeId;
     }
 }

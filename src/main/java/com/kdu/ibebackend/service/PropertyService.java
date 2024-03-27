@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.kdu.ibebackend.constants.Errors;
 import com.kdu.ibebackend.constants.GraphQLQueries;
+import com.kdu.ibebackend.dto.MinRates;
 import com.kdu.ibebackend.utils.ResponseParser;
 import com.kdu.ibebackend.models.RoomRate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,11 +74,23 @@ public class PropertyService {
         for (RoomRate rate : roomRates) {
             String dateString = rate.getDate().substring(0, 10);
             LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
-            double nightRate = rate.getBasic_nightly_rate();
+            double nightRate = rate.getBasicNightlyRate();
             minNightRates.putIfAbsent(date, nightRate);
             minNightRates.put(date, Math.min(minNightRates.get(date), nightRate));
         }
 
         return minNightRates;
+    }
+
+    public ResponseEntity<Object> getMinimumNightRatesList() {
+        try {
+            Map<LocalDate, Double> minNightRates = getMinimumNightRate();
+            List<MinRates> res = MinRates.convertMapToList(minNightRates);
+            MinRates.sortListByDate(res);
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>(Errors.MINIMUM_NIGHT_RATES, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-package com.kdu.ibebackend.models;
+package com.kdu.ibebackend.models.dynamodb;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
@@ -16,8 +16,8 @@ public class RoomInfo {
     @DynamoDBAttribute(attributeName = "room_rating")
     private Double roomRating;
 
-    @DynamoDBAttribute(attributeName = "room_reviews")
-    private List<String> roomReviews;
+    @DynamoDBAttribute(attributeName = "amenities")
+    private List<String> amenities;
 
     @DynamoDBAttribute(attributeName = "low_res_images")
     private List<String> lowResImages;

@@ -15,6 +15,9 @@ import org.springframework.web.filter.GenericFilterBean;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Authentication filter to enforce Access Key Header in All requests
+ */
 public class AuthenticationFilter extends GenericFilterBean {
 
     @Override
