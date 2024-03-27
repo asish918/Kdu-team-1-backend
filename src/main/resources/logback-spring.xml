@@ -1,0 +1,35 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!--Adding Colors to Logs-->
+        <withJansi>true</withJansi>
+        <!--Allowing only INFO logs to the console-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>KDU - %highlight(%-5level) %cyan(%logger{15}) -%kvp %msg %n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE-OUT" class="ch.qos.logback.core.FileAppender">
+        <!--Allowing only ERROR logs to the logs/app.log files-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>logs/app.log</file>
+        <append>true</append>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="com.kdu.ibebackend.logging.LoggerLayout"/>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <!--Logs sent to both Console and File -->
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE-OUT"/>
+    </root>
+</configuration>

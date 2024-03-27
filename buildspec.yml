@@ -1,0 +1,13 @@
+version: 0.2
+phases:
+  build:
+    commands:
+      - echo Packaging JAR File
+      - mvn clean install -DskipTests
+  post_build:
+    commands:
+      - echo Build complete.
+artifacts:
+  files:
+    - target/ibe-backend-0.0.1-SNAPSHOT.jar
+  discard-paths: yes
