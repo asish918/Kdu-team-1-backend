@@ -1,4 +1,4 @@
-package com.kdu.ibebackend.models;
+package com.kdu.ibebackend.models.dynamodb;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.*;
 import com.fasterxml.jackson.annotation.JsonProperty;

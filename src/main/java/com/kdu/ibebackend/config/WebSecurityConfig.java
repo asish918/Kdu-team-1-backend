@@ -1,5 +1,6 @@
 package com.kdu.ibebackend.config;
 
+import com.kdu.ibebackend.constants.AuthConstants;
 import com.kdu.ibebackend.security.AuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 /**
- * Custom Security Filter which currently allows all requests to hit the backend
+ * Custom Security Filter which allows WhiteListed URLs and opens up the path for Swagger Docs assets
  */
 @Configuration
 @EnableWebSecurity
@@ -25,12 +26,7 @@ public class WebSecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(
-                "http://kdu-team1-frontend.s3-website.ap-south-1.amazonaws.com",
-                "http://localhost:4173",
-                "http://localhost:5173",
-                "https://sprint-3.d33gvmzav8u7ie.amplifyapp.com"
-        ));
+        configuration.setAllowedOrigins(AuthConstants.WhiteListURLs);
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

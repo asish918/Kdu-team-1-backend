@@ -1,10 +1,14 @@
-package com.kdu.ibebackend.dto.response;
+package com.kdu.ibebackend.dto.graphql;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kdu.ibebackend.dto.response.RoomData;
 import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Upper level DTO for ListRoomAvailabilities GraphQL Query
+ */
 @Data
 public class ListRoomAvailabilities {
     @JsonProperty("data")

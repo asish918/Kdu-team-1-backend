@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Configuration for using Secrets Manager in SpringBoot with temporary cache to optimise retrieval costs
+ */
 @Configuration
 public class AwsSecretsManagerConfig {
 
@@ -25,7 +28,7 @@ public class AwsSecretsManagerConfig {
     public SecretCache secretCache(AWSSecretsManager awsSecretsManager) {
         SecretCacheConfiguration cacheConfig = new SecretCacheConfiguration()
                 .withMaxCacheSize(10)
-                .withCacheItemTTL(TimeUnit.MINUTES.toMillis(5))
+                .withCacheItemTTL(TimeUnit.MINUTES.toMillis(60))
                 .withClient(awsSecretsManager);
         return new SecretCache(cacheConfig);
     }

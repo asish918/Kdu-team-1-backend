@@ -16,6 +16,14 @@ public class GraphUtils {
         return requestBody.toString();
     }
 
+    /**
+     * Injects all search params in the query to fetch data based on the requested params
+     * @param query
+     * @param startDate
+     * @param endDate
+     * @param propertyId
+     * @return
+     */
     public static String injectSearchParamsQuery(String query, String startDate, String endDate, String propertyId) {
         return query.replace("gte: \"2024-03-01T00:00:00.000Z\"", "gte: \"" + startDate + "\"")
                 .replace("lte: \"2024-03-02T00:00:00.000Z\"", "lte: \"" + endDate + "\"")

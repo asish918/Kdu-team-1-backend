@@ -1,7 +1,7 @@
 package com.kdu.ibebackend.controller;
 
-import com.kdu.ibebackend.constants.Constants;
-import com.kdu.ibebackend.models.TenantConfig;
+import com.kdu.ibebackend.constants.AuthConstants;
+import com.kdu.ibebackend.models.dynamodb.TenantConfig;
 import com.kdu.ibebackend.repository.DynamoRepository;
 import com.kdu.ibebackend.service.CurrencyAPIService;
 import org.junit.jupiter.api.Test;
@@ -36,15 +36,13 @@ public class ConfigControllerTest {
 
     @Test
     public void getTenantConfig() throws Exception {
-        // Mocking the service method
         TenantConfig tenantConfig = new TenantConfig();
         tenantConfig.setTenantId(123);
         given(dynamoRepository.getTenantConfig(anyInt())).willReturn(tenantConfig);
 
-        // Performing GET request
         mockMvc.perform(get("/api/config?tenantId=1")
                         .contentType(MediaType.APPLICATION_JSON)
-                .header("X-Api-Key", Constants.AUTH_TOKEN))
+                .header("X-Api-Key", AuthConstants.AUTH_TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tenantId").value(123));
     }

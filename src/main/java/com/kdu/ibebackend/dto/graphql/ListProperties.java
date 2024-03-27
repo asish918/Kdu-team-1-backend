@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Response DTO for fetching properties
+ * Upper level DTO for ListProperties GraphQL Query
  */
 @Data
 @AllArgsConstructor

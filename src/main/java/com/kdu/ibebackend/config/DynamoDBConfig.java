@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Configuration using DynamoDB in SpringBoot
+ * Configuration for using DynamoDB in SpringBoot
  */
 @Configuration
 public class DynamoDBConfig {

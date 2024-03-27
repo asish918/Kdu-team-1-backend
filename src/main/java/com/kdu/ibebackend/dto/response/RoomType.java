@@ -8,23 +8,23 @@ import lombok.Data;
 @JsonIgnoreProperties
 public class RoomType {
     @JsonProperty("area_in_square_feet")
-    private Integer area_in_square_feet;
+    private Integer areaInSquareFeet;
 
     @JsonProperty("double_bed")
-    private Integer double_bed;
+    private Integer doubleBed;
 
     @JsonProperty("max_capacity")
-    private Integer max_capacity;
+    private Integer maxCapacity;
 
     @JsonProperty("property_id")
-    private Integer property_id;
+    private Integer propertyId;
 
     @JsonProperty("room_type_name")
-    private String room_type_name;
+    private String roomTypeName;
 
     @JsonProperty("single_bed")
-    private Integer single_bed;
+    private Integer singleBed;
 
     @JsonProperty("room_type_id")
-    private Integer room_type_id;
+    private Integer roomTypeId;
 }

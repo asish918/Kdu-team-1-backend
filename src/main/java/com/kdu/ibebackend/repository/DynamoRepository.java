@@ -4,14 +4,13 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kdu.ibebackend.models.RoomInfo;
-import com.kdu.ibebackend.models.TenantConfig;
+import com.kdu.ibebackend.models.dynamodb.RoomInfo;
+import com.kdu.ibebackend.models.dynamodb.TenantConfig;
 import com.kdu.ibebackend.utils.EnvUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
-
 
 /**
  * Repository to perform CRUD Operations on DynamoDB
@@ -39,7 +38,7 @@ public class DynamoRepository {
         return dynamoDBMapper.load(TenantConfig.class, tenantId);
     }
 
-    public RoomInfo getRoomRatingReview(Number roomTypeId) throws JsonProcessingException {
+    public RoomInfo getRoomInfo(Number roomTypeId) {
         return dynamoDBMapper.load(RoomInfo.class, roomTypeId);
     }
 
