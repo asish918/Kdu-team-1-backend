@@ -46,7 +46,7 @@ public class LandingPageControllerTest {
         minNightRates.put(LocalDate.of(2022, 3, 2), 50.0);
         given(propertyService.getMinimumNightRate()).willReturn(minNightRates);
 
-        mockMvc.perform(get("/api/landingpage/minrates")
+        mockMvc.perform(get("/api/v1/landingpage/minrates")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Api-Key", AuthConstants.AUTH_TOKEN))
                 .andExpect(status().isOk())
@@ -71,7 +71,7 @@ public class LandingPageControllerTest {
 
         given(graphQLService.executePostRequest(GraphQLQueries.fetchProperties, ListProperties.class)).willReturn(res);
 
-        mockMvc.perform(get("/api/landingpage/properties")
+        mockMvc.perform(get("/api/v1/landingpage/properties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Api-Key", AuthConstants.AUTH_TOKEN))
                 .andExpect(status().isOk())

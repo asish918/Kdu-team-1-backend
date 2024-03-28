@@ -16,4 +16,5 @@ public class ValidationConstants {
     public static final String PROPERTY_ID_NOT_NULL_MESSAGE = "Property ID cannot be null";
     public static final String TOTAL_GUESTS_POSITIVE_MESSAGE = "Total guests must be more than zero";
     public static final String TOTAL_GUESTS_NOT_NULL_MESSAGE = "Total guests cannot be null";
+    public static final String INVALID_PROMO = "The Promo Code is invalid";
 }

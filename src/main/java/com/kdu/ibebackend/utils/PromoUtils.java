@@ -2,12 +2,14 @@ package com.kdu.ibebackend.utils;
 
 import com.kdu.ibebackend.constants.PromoType;
 import com.kdu.ibebackend.dto.request.SearchParamDTO;
+import com.kdu.ibebackend.entities.PromoCode;
 import com.kdu.ibebackend.models.PromotionType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * Util function to validate Promotions
@@ -68,5 +70,17 @@ public class PromoUtils {
     public static boolean checkMilitaryPersonal(PromotionType promotionType, SearchParamDTO searchParamDTO) {
         if(Boolean.FALSE.equals(searchParamDTO.getIsMilitary())) return false;
         return validDayRange(promotionType, searchParamDTO) && Boolean.TRUE.equals(searchParamDTO.getIsMilitary()) && Integer.parseInt(promotionType.getPromotionId()) == PromoType.MILITARY.getPromotionId();
+    }
+
+    public static boolean promoCodeValidator(String promo, Integer roomTypeId, PromoCode promoCode) {
+        log.info(roomTypeId.toString());
+        if(!Objects.equals(roomTypeId, promoCode.getRoomTypeId())) return false;
+        if(!Objects.equals(promo, promoCode.getPromoCode())) return false;
+
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = promoCode.getStartDate().toLocalDate();
+        LocalDate endDate = promoCode.getEndDate().toLocalDate();
+
+        return today.isAfter(startDate) || today.isBefore(endDate);
     }
 }

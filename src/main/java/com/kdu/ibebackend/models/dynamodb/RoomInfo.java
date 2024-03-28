@@ -24,4 +24,7 @@ public class RoomInfo {
 
     @DynamoDBAttribute(attributeName = "high_res_images")
     private List<String> highResImages;
+
+    @DynamoDBAttribute(attributeName = "room_reviews")
+    private Integer roomReviews;
 }

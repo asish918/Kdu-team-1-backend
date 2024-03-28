@@ -1,5 +1,6 @@
 package com.kdu.ibebackend.exceptions;
 
+import com.kdu.ibebackend.exceptions.custom.InvalidPromoException;
 import com.kdu.ibebackend.exceptions.custom.ValidParamException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,13 @@ public class ApiException {
 
     @ExceptionHandler({MethodArgumentNotValidException.class, MethodArgumentTypeMismatchException.class})
     public ResponseEntity<String> validationError(Exception e) {
+        log.error(e.getMessage());
+        log.error(e.getClass().toGenericString());
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({InvalidPromoException.class})
+    public ResponseEntity<String> promoError(Exception e) {
         log.error(e.getMessage());
         log.error(e.getClass().toGenericString());
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

@@ -2,7 +2,10 @@ package com.kdu.ibebackend.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.kdu.ibebackend.constants.Errors;
+import com.kdu.ibebackend.dto.mappers.RoomReviewMapper;
+import com.kdu.ibebackend.dto.request.RoomReviewDTO;
 import com.kdu.ibebackend.models.dynamodb.RoomInfo;
+import com.kdu.ibebackend.models.dynamodb.RoomReview;
 import com.kdu.ibebackend.models.dynamodb.TenantConfig;
 import com.kdu.ibebackend.repository.DynamoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +38,10 @@ public class DynamoDBService {
     public RoomInfo fetchRoomInfo(Number roomTypeId) throws JsonProcessingException {
             RoomInfo roomInfo = dynamoRepository.getRoomInfo(roomTypeId);
             return roomInfo;
+    }
+
+    public void saveRoomReview(RoomReviewDTO roomReviewDTO) {
+        RoomReview roomReview = RoomReviewMapper.dtoToEntity(roomReviewDTO);
+        dynamoRepository.saveRoomReview(roomReview);
     }
 }

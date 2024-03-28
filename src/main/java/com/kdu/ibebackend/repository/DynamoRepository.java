@@ -5,6 +5,7 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kdu.ibebackend.models.dynamodb.RoomInfo;
+import com.kdu.ibebackend.models.dynamodb.RoomReview;
 import com.kdu.ibebackend.models.dynamodb.TenantConfig;
 import com.kdu.ibebackend.utils.EnvUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public class DynamoRepository {
         return dynamoDBMapper.load(RoomInfo.class, roomTypeId);
     }
 
-//    public void saveTenantConfig(TenantConfig tenantConfig) {
-//        dynamoDBMapper.save(tenantConfig);
-//    }
+    public void saveRoomReview(RoomReview roomReview) {
+        dynamoDBMapper.save(roomReview);
+    }
 }

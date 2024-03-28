@@ -13,10 +13,8 @@ import org.springframework.context.annotation.Configuration;
 public class DynamoDBConfig {
     @Bean
     public AmazonDynamoDB amazonDynamoDB() {
-        Regions region = Regions.AP_SOUTH_1;
-
         return AmazonDynamoDBClientBuilder.standard()
-                .withRegion(region)
+                .withRegion(Regions.AP_SOUTH_1)
                 .build();
     }
 }
