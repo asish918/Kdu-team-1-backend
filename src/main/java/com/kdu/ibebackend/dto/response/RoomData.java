@@ -14,10 +14,10 @@ public class RoomData {
     @Data
     public static class Room {
         @JsonProperty("room_id")
-        private Integer room_id;
+        private Integer roomId;
 
         @JsonProperty("room_type_id")
-        private Integer room_type_id;
+        private Integer roomTypeId;
 
         @JsonProperty("room_type")
         private RoomType roomType;

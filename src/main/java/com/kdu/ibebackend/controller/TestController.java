@@ -1,5 +1,6 @@
 package com.kdu.ibebackend.controller;
 
+import com.kdu.ibebackend.constants.Constants;
 import com.kdu.ibebackend.constants.GraphQLQueries;
 import com.kdu.ibebackend.dto.GraphQLResponse;
 import com.kdu.ibebackend.service.GraphQLService;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * this entire controller
  */
 @RestController
+@CrossOrigin("*")
 public class TestController {
     private final GraphQLService graphQLService;
 
@@ -33,7 +36,7 @@ public class TestController {
             })
     @GetMapping("/test")
     public String testHealthEndpoint() {
-        return "Hey there!! The server works great 👍";
+        return Constants.SERVER_SUCCESS;
     }
 
 

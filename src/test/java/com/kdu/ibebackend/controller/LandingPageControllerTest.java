@@ -1,8 +1,8 @@
 package com.kdu.ibebackend.controller;
 
-import com.kdu.ibebackend.constants.Constants;
+import com.kdu.ibebackend.constants.AuthConstants;
 import com.kdu.ibebackend.constants.GraphQLQueries;
-import com.kdu.ibebackend.dto.FetchProperties;
+import com.kdu.ibebackend.dto.graphql.ListProperties;
 import com.kdu.ibebackend.models.Property;
 import com.kdu.ibebackend.service.GraphQLService;
 import com.kdu.ibebackend.service.PropertyService;
@@ -41,16 +41,14 @@ public class LandingPageControllerTest {
 
     @Test
     public void getMinimumNightRate_ReturnsMinRatesList() throws Exception {
-        // Mocking the service method
         Map<LocalDate, Double> minNightRates = new HashMap<>();
         minNightRates.put(LocalDate.of(2022, 3, 1), 50.0);
         minNightRates.put(LocalDate.of(2022, 3, 2), 50.0);
         given(propertyService.getMinimumNightRate()).willReturn(minNightRates);
 
-        // Performing GET request
         mockMvc.perform(get("/api/landingpage/minrates")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Api-Key", Constants.AUTH_TOKEN))
+                        .header("X-Api-Key", AuthConstants.AUTH_TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].date").value("2022-03-01"))
@@ -61,25 +59,21 @@ public class LandingPageControllerTest {
 
     @Test
     public void getProperties_ReturnsFetchProperties() throws Exception {
-        // Prepare mock properties list
         List<Property> mockProperties = new ArrayList<>();
         mockProperties.add(new Property("Property 1", 1));
         mockProperties.add(new Property("Property 2", 2));
 
-        // Prepare FetchProperties object with mock properties
-        FetchProperties fetchProperties = new FetchProperties();
-        FetchProperties.Res propRes = new FetchProperties.Res();
+        ListProperties fetchProperties = new ListProperties();
+        ListProperties.Res propRes = new ListProperties.Res();
         propRes.setProperties(mockProperties);
         fetchProperties.setRes(propRes);
-        ResponseEntity<FetchProperties> res = new ResponseEntity<>(fetchProperties, HttpStatus.OK);
+        ResponseEntity<ListProperties> res = new ResponseEntity<>(fetchProperties, HttpStatus.OK);
 
-        // Mock the service method to return FetchProperties
-        given(graphQLService.executePostRequest(GraphQLQueries.fetchProperties, FetchProperties.class)).willReturn(res);
+        given(graphQLService.executePostRequest(GraphQLQueries.fetchProperties, ListProperties.class)).willReturn(res);
 
-        // Perform GET request to the properties endpoint
         mockMvc.perform(get("/api/landingpage/properties")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header("X-Api-Key", Constants.AUTH_TOKEN))
+                        .header("X-Api-Key", AuthConstants.AUTH_TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.data.listProperties[0].property_name").value("Property 1"))

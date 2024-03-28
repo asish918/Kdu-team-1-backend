@@ -6,6 +6,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Upper level DTO for ListRoomRateRoomTypeMappings GraphQL Query
+ */
 @Data
 public class ListRoomRateRoomTypeMappings {
     @JsonProperty("data")

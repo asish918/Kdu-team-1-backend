@@ -2,6 +2,9 @@ package com.kdu.ibebackend.utils;
 
 import com.kdu.ibebackend.dto.request.SearchParamDTO;
 
+/**
+ * Util functions to validate params
+ */
 public class ParamUtils {
     public static boolean isNumeric(String str) {
         return str != null && str.matches("[0-9.]+");

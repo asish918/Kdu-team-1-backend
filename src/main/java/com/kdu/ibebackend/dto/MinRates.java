@@ -22,22 +22,6 @@ public class MinRates {
         this.price = price;
     }
 
-//    public LocalDate getDate() {
-//        return date;
-//    }
-
-//    public void setDate(LocalDate date) {
-//        this.date = date;
-//    }
-
-//    public Double getPrice() {
-//        return price;
-//    }
-
-//    public void setPrice(Double value) {
-//        this.price = value;
-//    }
-
     public static List<MinRates> convertMapToList(Map<LocalDate, Double> map) {
         List<MinRates> resultList = new ArrayList<>();
         for (Map.Entry<LocalDate, Double> entry : map.entrySet()) {
@@ -48,7 +32,7 @@ public class MinRates {
     }
 
     public static void sortListByDate(List<MinRates> list) {
-        Collections.sort(list, new Comparator<MinRates>() {
+        list.sort(new Comparator<MinRates>() {
             @Override
             public int compare(MinRates o1, MinRates o2) {
                 return o1.getDate().compareTo(o2.getDate());

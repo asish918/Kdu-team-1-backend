@@ -1,4 +1,4 @@
-package com.kdu.ibebackend.dto.response;
+package com.kdu.ibebackend.dto.graphql;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kdu.ibebackend.models.PromotionType;
@@ -6,6 +6,9 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Upper level DTO for ListPromotions GraphQL Query
+ */
 @Data
 public class ListPromotions {
     @JsonProperty("data")
