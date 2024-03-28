@@ -59,7 +59,7 @@ class IbeBackendApplicationTests {
 
 	@Test
 	void fetchConfig() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/config?tenantId=1")
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/config?tenantId=1")
 						.contentType(MediaType.APPLICATION_JSON)
 						.header("X-Api-Key", AuthConstants.AUTH_TOKEN)) // Include X-Api-Key header
 				.andExpect(status().isOk())
@@ -68,7 +68,7 @@ class IbeBackendApplicationTests {
 
 	@Test
 	void fetchProperties() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/landingpage/properties")
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/landingpage/properties")
 						.header("X-Api-Key", AuthConstants.AUTH_TOKEN)
 						.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
@@ -77,7 +77,7 @@ class IbeBackendApplicationTests {
 
 	@Test
 	void fetchMinRates() throws Exception {
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/landingpage/minrates")
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/landingpage/minrates")
 						.contentType(MediaType.APPLICATION_JSON)
 						.header("X-Api-Key", AuthConstants.AUTH_TOKEN)) // Include X-Api-Key header
 				.andExpect(status().isOk())

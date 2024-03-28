@@ -2,6 +2,7 @@ package com.kdu.ibebackend.controller;
 
 import com.kdu.ibebackend.constants.AuthConstants;
 import com.kdu.ibebackend.constants.GraphQLQueries;
+import com.kdu.ibebackend.dto.MinRates;
 import com.kdu.ibebackend.dto.graphql.ListProperties;
 import com.kdu.ibebackend.models.Property;
 import com.kdu.ibebackend.service.GraphQLService;
@@ -18,9 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -41,20 +40,19 @@ public class LandingPageControllerTest {
 
     @Test
     public void getMinimumNightRate_ReturnsMinRatesList() throws Exception {
-        Map<LocalDate, Double> minNightRates = new HashMap<>();
-        minNightRates.put(LocalDate.of(2022, 3, 1), 50.0);
-        minNightRates.put(LocalDate.of(2022, 3, 2), 50.0);
-        given(propertyService.getMinimumNightRate()).willReturn(minNightRates);
+        MinRates minRates = new MinRates(LocalDate.of(2022, 3, 1), 50.0);
+        List<MinRates> resList = new ArrayList<>();
+        resList.add(minRates);
+        ResponseEntity<Object> res = new ResponseEntity<>(resList, HttpStatus.OK);
+        given(propertyService.getMinimumNightRatesList()).willReturn(res);
 
-        mockMvc.perform(get("/api/landingpage/minrates")
+        mockMvc.perform(get("/api/v1/landingpage/minrates")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Api-Key", AuthConstants.AUTH_TOKEN))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].date").value("2022-03-01"))
-                .andExpect(jsonPath("$[0].price").value(50.0))
-                .andExpect(jsonPath("$[1].date").value("2022-03-02"))
-                .andExpect(jsonPath("$[1].price").value(50.0));
+                .andExpect(jsonPath("$[0].price").value(50.0));
     }
 
     @Test
@@ -71,7 +69,7 @@ public class LandingPageControllerTest {
 
         given(graphQLService.executePostRequest(GraphQLQueries.fetchProperties, ListProperties.class)).willReturn(res);
 
-        mockMvc.perform(get("/api/landingpage/properties")
+        mockMvc.perform(get("/api/v1/landingpage/properties")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("X-Api-Key", AuthConstants.AUTH_TOKEN))
                 .andExpect(status().isOk())

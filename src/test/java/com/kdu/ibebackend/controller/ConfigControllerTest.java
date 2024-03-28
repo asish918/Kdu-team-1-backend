@@ -4,12 +4,15 @@ import com.kdu.ibebackend.constants.AuthConstants;
 import com.kdu.ibebackend.models.dynamodb.TenantConfig;
 import com.kdu.ibebackend.repository.DynamoRepository;
 import com.kdu.ibebackend.service.CurrencyAPIService;
+import com.kdu.ibebackend.service.DynamoDBService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -29,7 +32,7 @@ public class ConfigControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private DynamoRepository dynamoRepository;
+    private DynamoDBService dynamoDBService;
 
     @MockBean
     private CurrencyAPIService currencyAPIService;
@@ -38,9 +41,10 @@ public class ConfigControllerTest {
     public void getTenantConfig() throws Exception {
         TenantConfig tenantConfig = new TenantConfig();
         tenantConfig.setTenantId(123);
-        given(dynamoRepository.getTenantConfig(anyInt())).willReturn(tenantConfig);
+        ResponseEntity<Object> res = new ResponseEntity<>(tenantConfig, HttpStatus.OK);
+        given(dynamoDBService.fetchTenantConfig(anyInt())).willReturn(res);
 
-        mockMvc.perform(get("/api/config?tenantId=1")
+        mockMvc.perform(get("/api/v1/config?tenantId=1")
                         .contentType(MediaType.APPLICATION_JSON)
                 .header("X-Api-Key", AuthConstants.AUTH_TOKEN))
                 .andExpect(status().isOk())
